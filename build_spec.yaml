@@ -58,8 +58,11 @@ steps:
       wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${sonar_cli_version}-linux.zip
       unzip sonar-scanner-cli-${sonar_cli_version}-linux.zip
       PATH=$PATH:"sonar-scanner-${sonar_cli_version}-linux/bin"
-      sonar-scanner
-      ls
+      sonar-scanner \
+          -Dsonar.projectKey=oci_build_sonar \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=http://129.153.5.206:9000 \
+          -Dsonar.login=${sonar_token}
     
     onFailure:
       - type: Command
