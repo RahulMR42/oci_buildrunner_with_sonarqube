@@ -9,3 +9,4 @@ switch (param) {
       doSomethingElse();
       break;
   }
+  
