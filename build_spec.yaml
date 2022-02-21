@@ -31,34 +31,35 @@ steps:
     timeoutInSeconds: 600
     name: "Build the app"
     command: |
-      cd ${OCI_WORKSPACE_DIR}/${code_repo_name}
-      java -version
-      wget -q https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${graal_vm_version}/graalvm-ce-java17-linux-amd64-${graal_vm_version}.tar.gz
-      tar zxf graalvm-ce-java17-linux-amd64-${graal_vm_version}.tar.gz
-      export java_graal_home=./graalvm-ce-java17-${graal_vm_version}/bin/
-      ${java_graal_home}/gu list
+      cd ${OCI_PRIMARY_SOURCE_DIR}
       ls -ltr 
-      ./build.sh
-       ls -ltr 
+#       java -version
+#       wget -q https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${graal_vm_version}/graalvm-ce-java17-linux-amd64-${graal_vm_version}.tar.gz
+#       tar zxf graalvm-ce-java17-linux-amd64-${graal_vm_version}.tar.gz
+#       export java_graal_home=./graalvm-ce-java17-${graal_vm_version}/bin/
+#       ${java_graal_home}/gu list
+#       ls -ltr 
+#       ./build.sh
+#        ls -ltr 
     
-    onFailure:
-      - type: Command
-        command: |
-          echo "Handling Failure"
-          echo "Failure successfully handled"
-        timeoutInSeconds: 40
-        runAs: root
+#     onFailure:
+#       - type: Command
+#         command: |
+#           echo "Handling Failure"
+#           echo "Failure successfully handled"
+#         timeoutInSeconds: 40
+#         runAs: root
 
-  - type: Command
-    timeoutInSeconds: 1200
-    name: "Build container image"
-    command: |
-      cd ${OCI_WORKSPACE_DIR}/${code_repo_name}
-      docker build --pull --rm -t graal_polyglot_sample_app .      
+#   - type: Command
+#     timeoutInSeconds: 1200
+#     name: "Build container image"
+#     command: |
+#       cd ${OCI_WORKSPACE_DIR}/${code_repo_name}
+#       docker build --pull --rm -t graal_polyglot_sample_app .      
      
-outputArtifacts:
-  - name: graal_polyglot_docker_image
-    type: DOCKER_IMAGE
-    # this location tag doesn't effect the tag used to deliver the container image
-    # to the Container Registry
-    location: graal_polyglot_sample_pp:latest
+# outputArtifacts:
+#   - name: graal_polyglot_docker_image
+#     type: DOCKER_IMAGE
+#     # this location tag doesn't effect the tag used to deliver the container image
+#     # to the Container Registry
+#     location: graal_polyglot_sample_pp:latest
