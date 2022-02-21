@@ -35,7 +35,7 @@ steps:
       cd ${OCI_PRIMARY_SOURCE_DIR}
       ls -ltr 
       java -version
-      wget -q https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${graal_vm_version}/graalvm-ce-java17-linux-amd64-${graal_vm_version}.tar.gz 1>/dev/null
+      wget -q https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${graal_vm_version}/graalvm-ce-java17-linux-amd64-${graal_vm_version}.tar.gz 1>/dev/null 2>/dev/null
       tar zxf graalvm-ce-java17-linux-amd64-${graal_vm_version}.tar.gz
       export java_graal_home=./graalvm-ce-java17-${graal_vm_version}/bin/
       ${java_graal_home}/gu list
@@ -56,7 +56,7 @@ steps:
     name: "Sonarqube Integration"
     command: |
       cd ${OCI_PRIMARY_SOURCE_DIR}
-      wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${sonar_cli_version}-linux.zip 1>/dev/null
+      wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${sonar_cli_version}-linux.zip 1>/dev/null 2>/dev/null
       unzip sonar-scanner-cli-${sonar_cli_version}-linux.zip 1>/dev/null
       PATH=$PATH:"sonar-scanner-${sonar_cli_version}-linux/bin"
       sonar-scanner \
