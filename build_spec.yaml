@@ -8,6 +8,7 @@ env:
   variables:
     graal_vm_version: "21.3.0"
     sonar_cli_version: "4.6.2.2472"
+    sonar_quality_wait: "true"
 
   # the value of a vaultVariable is the secret-id (in OCI ID format) stored in the OCI Vault service
   # you can then access the value of that secret in your build_spec.yaml commands
@@ -56,13 +57,14 @@ steps:
     command: |
       cd ${OCI_PRIMARY_SOURCE_DIR}
       wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${sonar_cli_version}-linux.zip
-      unzip sonar-scanner-cli-${sonar_cli_version}-linux.zip
+      unzip sonar-scanner-cli-${sonar_cli_version}-linux.zip 1>/dev/null
       PATH=$PATH:"sonar-scanner-${sonar_cli_version}-linux/bin"
       sonar-scanner \
           -Dsonar.projectKey=oci_build_sonar \
           -Dsonar.sources=. \
           -Dsonar.host.url=http://129.153.5.206:9000 \
-          -Dsonar.login=${sonar_token}
+          -Dsonar.login=${sonar_token} \
+          -Dsonar.qualitygate.wait=${sonar_quality_wait}
     
     onFailure:
       - type: Command
