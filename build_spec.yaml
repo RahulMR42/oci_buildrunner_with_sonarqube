@@ -50,7 +50,7 @@ steps:
         timeoutInSeconds: 40
         runAs: root
 
-   - type: Command
+  - type: Command
     timeoutInSeconds: 600
     name: "Sonarqube Integration"
     command: |
