@@ -7,12 +7,12 @@ env:
   # these are local variables to the build config
   variables:
     graal_vm_version: "21.3.0"
-    code_repo_name: "oci-java-graalvm-devops-example"
+    sonar_cli_version: "4.6.2.2472"
 
   # the value of a vaultVariable is the secret-id (in OCI ID format) stored in the OCI Vault service
   # you can then access the value of that secret in your build_spec.yaml commands
   vaultVariables:
-  #  EXAMPLE_SECRET: "YOUR-SECRET-OCID"
+    sonar_token: "ocid1.vaultsecret.oc1.iad.amaaaaaak56z2vqadqsy6l5lqyogzyxofhshsw25jyeeioe5w6rpd5l2l6wa"
   
   # exportedVariables are made available to use as parameters in sucessor Build Pipeline stages
   # For this Build to run, the Build Pipeline needs to have a BUILDRUN_HASH parameter set
@@ -33,22 +33,44 @@ steps:
     command: |
       cd ${OCI_PRIMARY_SOURCE_DIR}
       ls -ltr 
-#       java -version
-#       wget -q https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${graal_vm_version}/graalvm-ce-java17-linux-amd64-${graal_vm_version}.tar.gz
-#       tar zxf graalvm-ce-java17-linux-amd64-${graal_vm_version}.tar.gz
-#       export java_graal_home=./graalvm-ce-java17-${graal_vm_version}/bin/
-#       ${java_graal_home}/gu list
-#       ls -ltr 
-#       ./build.sh
-#        ls -ltr 
+      java -version
+      wget -q https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${graal_vm_version}/graalvm-ce-java17-linux-amd64-${graal_vm_version}.tar.gz
+      tar zxf graalvm-ce-java17-linux-amd64-${graal_vm_version}.tar.gz
+      export java_graal_home=./graalvm-ce-java17-${graal_vm_version}/bin/
+      ${java_graal_home}/gu list
+      ls -ltr 
+      ./build.sh
+       ls -ltr 
     
-#     onFailure:
-#       - type: Command
-#         command: |
-#           echo "Handling Failure"
-#           echo "Failure successfully handled"
-#         timeoutInSeconds: 40
-#         runAs: root
+    onFailure:
+      - type: Command
+        command: |
+          echo "Handling Failure"
+          echo "Failure successfully handled"
+        timeoutInSeconds: 40
+        runAs: root
+
+   - type: Command
+    timeoutInSeconds: 600
+    name: "Sonarqube Integration"
+    command: |
+      cd ${OCI_PRIMARY_SOURCE_DIR}
+      wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${sonar_cli_version}-linux.zip
+      unzip sonar-scanner-cli-${sonar_cli_version}-linux.zip
+      PATH=$PATH:"sonar-scanner-${sonar_cli_version}-linux/bin"
+      sonar-scanner
+      ls
+    
+    onFailure:
+      - type: Command
+        command: |
+          echo "Handling Failure"
+          echo "Failure successfully handled"
+        timeoutInSeconds: 40
+        runAs: root
+      
+
+
 
 #   - type: Command
 #     timeoutInSeconds: 1200
